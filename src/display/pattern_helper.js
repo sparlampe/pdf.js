@@ -42,6 +42,26 @@ ShadingIRs.RadialAxial = {
         }
         return grad;
       },
+      getPatternTransformed: function RadialAxial_getPatternTransformed(ctx, n, transforms) { // eslint-disable-line
+        var grad;
+        var end = [...p1];
+        var start = [...p0];
+        transforms.forEach((t) => {
+          start = Util.applyTransform(start, t);
+          end = Util.applyTransform(end, t);
+        });
+        if (type === 'axial') {
+          grad = ctx.createLinearGradient(...start, ...end);
+        } else if (type === 'radial') {
+          grad = ctx.createRadialGradient(...start, r0, ...end, r1);
+        }
+
+        for (var i = 0, ii = colorStops.length; i < ii; ++i) {
+          var c = colorStops[i];
+          grad.addColorStop(c[0], c[1]);
+        }
+        return grad;
+      },
     };
   },
 };

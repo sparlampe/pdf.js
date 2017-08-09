@@ -1151,7 +1151,13 @@ var CanvasGraphics = (function CanvasGraphicsClosure() {
         // for patterns, we transform to pattern space, calculate
         // the pattern, call stroke, and restore to user space
         ctx.save();
-        ctx.strokeStyle = strokeColor.getPattern(ctx, this);
+        const transforms = []
+        if (this.baseTransform && ctx.mozCurrentTransformInverse) {
+          [this.baseTransform, ctx.mozCurrentTransformInverse].forEach((t) => { // eslint-disable-line
+            transforms.push(t);
+          });
+        }
+        ctx.strokeStyle = strokeColor.getPatternTransformed(ctx, this, transforms); // eslint-disable-line
         ctx.stroke();
         ctx.restore();
       } else {
